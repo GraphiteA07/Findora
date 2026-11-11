@@ -1,21 +1,15 @@
-/* STATUS: Working
-  
-Added:
-1) Exit? (y/n) to reduce accidental exits. 
-2) void display_inputs(struct Details *p);
-3) void display_details(struct Details *p);
-4) bool is_input_blank(struct Details *p);    
+/* STATUS: Changed Lost and Found to Findora, Added Found Location for Found Item
+ 
+---Group Members---
+- Muhammad Saim
+- Syed Zain Raza Abbas
+- Shan -E- Ali
 
-Removed:
-1) void display_LI_inputs(struct Details *LI_person);
-2) void display_FI_inputs(struct Details *FI_person);
-3) bool is_LI_input_blank(struct Details *LI_person);
-4) bool is_FI_input_blank(struct Details *FI_person); 
+---Project Name---
+- Findora
 
-Remove kyu kiye functions:
-- Aik hi kaam do alag alag functions kar rahe the.
-  Ab aik hi function kar raha hei
 */
+
 
 #include <iostream>
 #include <string>
@@ -24,14 +18,25 @@ Remove kyu kiye functions:
 using namespace std;
 
 
+enum MenuOptions {
+    LOST_ITEM          = '1',
+    FOUND_ITEM         = '2',
+    SEARCH_ITEM        = '3',
+    DISPLAY_DETAILS    = '4',
+    EXIT               = '5',
+};
+
+
+
 void directing(); 
-void lost_and_found();
-void lost_and_found_animate(); 
-void display_inputs(struct Details *p);
-void display_details(struct Details *p);
-bool is_input_blank(struct Details *p);
+void findora();
+void findora_animate(); 
+void display_inputs(struct Details *p, enum MenuOptions option);
+void display_details(struct Details *p, enum MenuOptions option);
+bool is_input_blank(struct Details *p, enum MenuOptions option);
 
 unsigned int DELAY = 60000;   /*41900*/
+unsigned int DELAY_2 = 29900;   /*41900*/
 /* bool is_lost_active = false; */
 /* bool is_found_active = false; */
 
@@ -44,17 +49,11 @@ struct Details {
     string Item_Color;
     string Unique_ID;
     string Last_Seen_Location;
+    string Found_Location;
     string Date_Time;
     string Contact_Info;
 };
 
-enum {
-    LOST_ITEM          = '1',
-    FOUND_ITEM         = '2',
-    SEARCH_ITEM        = '3',
-    DISPLAY_DETAILS    = '4',
-    EXIT               = '5',
-};
 
 
 int main() {
@@ -108,11 +107,11 @@ start:
             system("cls");
 
             if (is_first_launch) {
-                lost_and_found();
+                findora();
             }
 
             else{
-                lost_and_found_animate();
+                findora_animate();
             }
 
             cout << "\n\n\n\n";
@@ -176,9 +175,9 @@ start:
             case LOST_ITEM:
                 cout << endl << endl << "  Report Lost Item" << endl;
                 cout << "----------------------------------" << endl << endl << endl;
-                display_inputs(&LI_person);
+                display_inputs(&LI_person, LOST_ITEM);
 
-                if (!is_input_blank(&LI_person)) {
+                if (!is_input_blank(&LI_person, LOST_ITEM)) {
                     cout << endl << "  All details are provided.";
                 }
                 break;
@@ -187,9 +186,9 @@ start:
             case FOUND_ITEM:
                 cout << endl << endl << "  Report Found Item" << endl;
                 cout << "----------------------------------" << endl << endl << endl;
-                display_inputs(&FI_person);
+                display_inputs(&FI_person, FOUND_ITEM);
 
-                if (!is_input_blank(&FI_person)) {
+                if (!is_input_blank(&FI_person, FOUND_ITEM)) {
                     cout << endl <<  "  All details are provided.";
                 }
                 break;
@@ -206,20 +205,20 @@ start:
 
                     cout << endl << endl << "  Lost Item Details" << endl;
                     cout << "----------------------------------" << endl << endl << endl;
-                    display_details(&LI_person);
+                    display_details(&LI_person, LOST_ITEM);
                 }
 
                 if (display_details_option == FOUND_ITEM) {
 
                     cout << endl << endl << "  Found Item Details" << endl;
                     cout << "----------------------------------" << endl << endl << endl;
-                    display_details(&FI_person);
+                    display_details(&FI_person, FOUND_ITEM);
                 }
                 break;
 
 
 
-        }//end of switch
+        }//end of switch()
 
         cout << endl << endl << "  Press any key... ";
         (void)getch();
@@ -233,49 +232,41 @@ start:
 }//end of main()
 
 
-void lost_and_found_animate() {
+void findora_animate() {
 
     cout << endl << endl;
-    cout << "  $$\\                            $$\\                                     $$\\       $$$$$$$$\\                                  $$\\ \n";
-    usleep(DELAY);
-    cout << "  $$ |                           $$ |                                    $$ |      $$  _____|                                 $$ |\n";
 
+    cout << "\t\t\t\t$$$$$$$$\\ $$\\                 $$\\                               \n";
     usleep(DELAY);
-    cout << "  $$ |      $$$$$$\\   $$$$$$$\\ $$$$$$\\          $$$$$$\\  $$$$$$$\\   $$$$$$$ |      $$ |    $$$$$$\\  $$\\   $$\\ $$$$$$$\\   $$$$$$$ |\n";
-
+    cout << "\t\t\t\t$$  _____|\\__|                $$ |                              \n";
     usleep(DELAY);
-    cout << "  $$ |     $$  __$$\\ $$  _____|\\_$$  _|         \\____$$\\ $$  __$$\\ $$  __$$ |      $$$$$\\ $$  __$$\\ $$ |  $$ |$$  __$$\\ $$  __$$ |\n";
+    cout << "\t\t\t\t$$ |      $$\\ $$$$$$$\\   $$$$$$$ | $$$$$$\\   $$$$$$\\  $$$$$$\\   \n";
     usleep(DELAY);
-    cout << "  $$ |     $$ /  $$ |\\$$$$$$\\    $$ |           $$$$$$$ |$$ |  $$ |$$ /  $$ |      $$  __|$$ /  $$ |$$ |  $$ |$$ |  $$ |$$ /  $$ |\n";
+    cout << "\t\t\t\t$$$$$\\    $$ |$$  __$$\\ $$  __$$ |$$  __$$\\ $$  __$$\\ \\____$$\\  \n";
     usleep(DELAY);
-    cout << "  $$ |     $$ |  $$ | \\____$$\\   $$ |$$\\       $$  __$$ |$$ |  $$ |$$ |  $$ |      $$ |   $$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |\n";
+    cout << "\t\t\t\t$$  __|   $$ |$$ |  $$ |$$ /  $$ |$$ /  $$ |$$ |  \\__|$$$$$$$ | \n";
     usleep(DELAY);
-    cout << "  $$$$$$$$\\\\$$$$$$  |$$$$$$$  |  \\$$$$  |      \\$$$$$$$ |$$ |  $$ |\\$$$$$$$ |      $$ |   \\$$$$$$  |\\$$$$$$  |$$ |  $$ |\\$$$$$$$ |\n";
-
+    cout << "\t\t\t\t$$ |      $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |     $$  __$$ | \n";
     usleep(DELAY);
-
-    cout << "  \\________|\\______/ \\_______/    \\____/        \\_______|\\__|  \\__| \\_______|      \\__|    \\______/  \\______/ \\__|  \\__| \\_______|\n";
-
+    cout << "\t\t\t\t$$ |      $$ |$$ |  $$ |\\$$$$$$$ |\\$$$$$$  |$$ |     \\$$$$$$$ | \n";
     usleep(DELAY);
-
-
+    cout << "\t\t\t\t\\__|      \\__|\\__|  \\__| \\_______| \\______/ \\__|      \\_______| \n";
+    usleep(DELAY);
 } 
 
-void lost_and_found() {
+void findora() {
 
     cout << endl << endl;
-    cout << "  $$\\                            $$\\                                     $$\\       $$$$$$$$\\                                  $$\\ \n";
-    cout << "  $$ |                           $$ |                                    $$ |      $$  _____|                                 $$ |\n";
-    cout << "  $$ |      $$$$$$\\   $$$$$$$\\ $$$$$$\\          $$$$$$\\  $$$$$$$\\   $$$$$$$ |      $$ |    $$$$$$\\  $$\\   $$\\ $$$$$$$\\   $$$$$$$ |\n";
-    cout << "  $$ |     $$  __$$\\ $$  _____|\\_$$  _|         \\____$$\\ $$  __$$\\ $$  __$$ |      $$$$$\\ $$  __$$\\ $$ |  $$ |$$  __$$\\ $$  __$$ |\n";
-    cout << "  $$ |     $$ /  $$ |\\$$$$$$\\    $$ |           $$$$$$$ |$$ |  $$ |$$ /  $$ |      $$  __|$$ /  $$ |$$ |  $$ |$$ |  $$ |$$ /  $$ |\n";
-    cout << "  $$ |     $$ |  $$ | \\____$$\\   $$ |$$\\       $$  __$$ |$$ |  $$ |$$ |  $$ |      $$ |   $$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |\n";
-    cout << "  $$$$$$$$\\\\$$$$$$  |$$$$$$$  |  \\$$$$  |      \\$$$$$$$ |$$ |  $$ |\\$$$$$$$ |      $$ |   \\$$$$$$  |\\$$$$$$  |$$ |  $$ |\\$$$$$$$ |\n";
-    cout << "  \\________|\\______/ \\_______/    \\____/        \\_______|\\__|  \\__| \\_______|      \\__|    \\______/  \\______/ \\__|  \\__| \\_______|\n";
 
-} 
-
-
+    cout << "\t\t\t\t$$$$$$$$\\ $$\\                 $$\\                               \n";
+    cout << "\t\t\t\t$$  _____|\\__|                $$ |                              \n";
+    cout << "\t\t\t\t$$ |      $$\\ $$$$$$$\\   $$$$$$$ | $$$$$$\\   $$$$$$\\  $$$$$$\\   \n";
+    cout << "\t\t\t\t$$$$$\\    $$ |$$  __$$\\ $$  __$$ |$$  __$$\\ $$  __$$\\ \\____$$\\  \n";
+    cout << "\t\t\t\t$$  __|   $$ |$$ |  $$ |$$ /  $$ |$$ /  $$ |$$ |  \\__|$$$$$$$ | \n";
+    cout << "\t\t\t\t$$ |      $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |     $$  __$$ | \n";
+    cout << "\t\t\t\t$$ |      $$ |$$ |  $$ |\\$$$$$$$ |\\$$$$$$  |$$ |     \\$$$$$$$ | \n";
+    cout << "\t\t\t\t\\__|      \\__|\\__|  \\__| \\_______| \\______/ \\__|      \\_______| \n";
+}
 
 
 void directing() {
@@ -291,20 +282,28 @@ void directing() {
     cout << "\n";
 } 
 
-bool is_input_blank(struct Details *p) {
+bool is_input_blank(struct Details *p, enum MenuOptions option) {
 
-    if(p->Category.empty() || p->Item_Name.empty() || p->Brand_Name.empty() ||
-            p->Item_Color.empty() || p->Unique_ID.empty() || p->Last_Seen_Location.empty() ||
-            p->Date_Time.empty() || p->Contact_Info.empty()) {
+    if(p->Category.empty()   || p->Item_Name.empty()  || p->Brand_Name.empty() ||
+       p->Item_Color.empty() || p->Unique_ID.empty()  || 
+       p->Date_Time.empty()  || p->Contact_Info.empty()) {
+
         return true;
     }
 
-    else {
-        return false;
+
+    if (option == LOST_ITEM && p->Last_Seen_Location.empty()) {
+        return true;
     }
+
+    if (option == FOUND_ITEM && p->Found_Location.empty()) {
+        return true;
+    }
+
+    return false;
 }
 
-void display_inputs(struct Details *p) {
+void display_inputs(struct Details *p, enum MenuOptions option) {
 
     if (p->Category.empty()) {
         cout << "  For Example: [Electronics | Documents | Apparel | Valuables | Other]" << endl << endl; 
@@ -333,10 +332,24 @@ void display_inputs(struct Details *p) {
         getline(cin, p->Unique_ID);
     }
 
+    if (option == LOST_ITEM) {
+
     if (p->Last_Seen_Location.empty()) {
         cout << endl << "  Enter Last Seen Location: ";
         getline(cin, p->Last_Seen_Location);
     }
+
+    }
+
+    else {
+
+    if (p->Found_Location.empty()) {
+        cout << endl << "  Enter Found Location: ";
+        getline(cin, p->Found_Location);
+    }
+
+    }
+
 
     if (p->Date_Time.empty()) {
         cout << endl << "  Enter Date and Time (DD-MM-YYYY HH:MM AM/PM): ";
@@ -349,16 +362,36 @@ void display_inputs(struct Details *p) {
     }
 }
 
-void display_details(struct Details *p) {
+void display_details(struct Details *p, enum MenuOptions option) {
 
+    usleep(DELAY_2);
     cout << "   Name                : " << p->Name << endl;
+    usleep(DELAY_2);
     cout << "   ID                  : " << p->ID << endl;
+    usleep(DELAY_2);
     cout << "   Category            : " << p->Category << endl;
+    usleep(DELAY_2);
     cout << "   Item name           : " << p->Item_Name << endl;
+    usleep(DELAY_2);
     cout << "   Brand name          : " << p->Brand_Name << endl;
+    usleep(DELAY_2);
     cout << "   Item color          : " << p->Item_Color << endl;
+    usleep(DELAY_2);
     cout << "   Unique ID           : " << p->Unique_ID << endl;
+    usleep(DELAY_2);
+
+    if (option == LOST_ITEM) {
     cout << "   Last seen location  : " << p->Last_Seen_Location << endl;
+    usleep(DELAY_2);
+    }
+
+    else {
+    cout << "   Found Location      : " << p->Found_Location << endl;
+    usleep(DELAY_2);
+    }
+
     cout << "   Date time           : " << p->Date_Time << endl;
+    usleep(DELAY_2);
     cout << "   Contact info        : " << p->Contact_Info << endl;
+    usleep(DELAY_2);
 }

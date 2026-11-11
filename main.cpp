@@ -157,7 +157,7 @@ start:
                     }
 
                     if (display_details_option != LOST_ITEM && display_details_option != FOUND_ITEM) {
-                        cout << endl << endl << "  Error: Invalid Option" << endl;
+                        cout << endl << endl << " \t\t\t\t\t\t    Error: Invalid Option" << endl;
                     }
                 }while(display_details_option != LOST_ITEM && display_details_option != FOUND_ITEM);
             }// end of outer if()
